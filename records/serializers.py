@@ -9,6 +9,7 @@ class RecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Record
         fields = [
+            "id",
             "type",
             "date",
             "description",
@@ -24,11 +25,13 @@ class RecordSerializer(serializers.ModelSerializer):
             "updated_at": {"read_only": True},
             "amount": {"min_value": Decimal("0.01")},
             "description": {"allow_null": True, "required": False},
+            "id": {"read_only": True},
         }
 
 
 class DashboardSummarySerializer(serializers.Serializer):
     """Compact serializer for the dashboard summary data."""
+
     total_income = serializers.DecimalField(max_digits=12, decimal_places=2)
     total_expense = serializers.DecimalField(max_digits=12, decimal_places=2)
     net_balance = serializers.DecimalField(max_digits=12, decimal_places=2)

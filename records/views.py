@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from django_filters import rest_framework as filters
+from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.filters import OrderingFilter
@@ -15,8 +16,6 @@ from .models import Record
 from .pagination import StandardResultsSetPagination
 from .serializers import DashboardSummarySerializer, RecordSerializer
 from .services.dashboard import get_dashboard_summary
-
-from drf_spectacular.utils import extend_schema
 
 # Create your views here.
 
