@@ -47,33 +47,4 @@ class Record(models.Model):
         return f"{self.date} - {self.type} - {self.amount}"
 
     def save(self, *args, **kwargs):
-        # self.full_clean()
         super().save(*args, **kwargs)
-
-    def clean(self):
-        income_categories = {
-            self.Category.SALARY,
-            self.Category.FREELANCE,
-            self.Category.BUSINESS,
-            self.Category.INVESTMENT,
-            self.Category.BONUS,
-            self.Category.OTHER_INCOME,
-        }
-
-        expense_categories = {
-            self.Category.FOOD,
-            self.Category.RENT,
-            self.Category.TRANSPORT,
-            self.Category.UTILITIES,
-            self.Category.ENTERTAINMENT,
-            self.Category.HEALTH,
-            self.Category.SHOPPING,
-            self.Category.EDUCATION,
-            self.Category.TRAVEL,
-        }
-
-        if self.type == self.Type.INCOME and self.category not in income_categories:
-            raise ValidationError("Invalid category for income")
-
-        if self.type == self.Type.EXPENSE and self.category not in expense_categories:
-            raise ValidationError("Invalid category for expense")

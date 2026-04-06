@@ -28,6 +28,55 @@ class RecordSerializer(serializers.ModelSerializer):
             "id": {"read_only": True},
         }
 
+    def validate(self, data):
+        """
+        Validate that the chosen category matches the record type.
+        """
+        # Handle partial updates by getting existing values if not provided in data
+        record_type = data.get("type")
+        category = data.get("category")
+
+        if self.instance:
+            if record_type is None:
+                record_type = self.instance.type
+            if category is None:
+                category = self.instance.category
+
+        # Define category groupings based on the Record model
+        income_categories = {
+            Record.Category.SALARY,
+            Record.Category.FREELANCE,
+            Record.Category.BUSINESS,
+            Record.Category.INVESTMENT,
+            Record.Category.BONUS,
+            Record.Category.OTHER_INCOME,
+        }
+
+        expense_categories = {
+            Record.Category.FOOD,
+            Record.Category.RENT,
+            Record.Category.TRANSPORT,
+            Record.Category.UTILITIES,
+            Record.Category.ENTERTAINMENT,
+            Record.Category.HEALTH,
+            Record.Category.SHOPPING,
+            Record.Category.EDUCATION,
+            Record.Category.TRAVEL,
+        }
+
+        # Perform the validation
+        if record_type == Record.Type.INCOME and category not in income_categories:
+            raise serializers.ValidationError(
+                {"category": f"'{category}' is not a valid category for income."}
+            )
+
+        if record_type == Record.Type.EXPENSE and category not in expense_categories:
+            raise serializers.ValidationError(
+                {"category": f"'{category}' is not a valid category for expense."}
+            )
+
+        return data
+
 
 class DashboardSummarySerializer(serializers.Serializer):
     """Compact serializer for the dashboard summary data."""
