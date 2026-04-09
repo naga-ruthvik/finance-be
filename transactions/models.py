@@ -6,7 +6,8 @@ from django.db.models import TextChoices
 # Create your models here.
 
 
-class Record(models.Model):
+class Transaction(models.Model):
+
     class Type(TextChoices):
         INCOME = "INCOME", "income"
         EXPENSE = "EXPENSE", "expense "

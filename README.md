@@ -2,7 +2,7 @@
 
 ## Populate SQLite with sample data
 
-Run this single command to create sample users and records:
+Run this single command to create sample users and transactions:
 
 ```bash
 python manage.py populate_db

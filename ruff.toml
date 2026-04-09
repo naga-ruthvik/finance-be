@@ -46,7 +46,7 @@ exclude = [
 
 [lint.isort]
 # Django-specific import ordering
-known-first-party = ["volt", "apps"]
+known-first-party = ["finance-be", "apps"]
 section-order = ["future", "standard-library", "django", "third-party", "first-party", "local-folder"]
 
 [lint.isort.sections]

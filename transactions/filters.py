@@ -2,10 +2,10 @@ from django import forms
 
 from django_filters import rest_framework as filters
 
-from .models import Record
+from .models import Transaction
 
 
-class RecordFilter(filters.FilterSet):
+class TransactionFilter(filters.FilterSet):
     date_from = filters.DateFilter(
         field_name="date",
         lookup_expr="gte",
@@ -21,5 +21,5 @@ class RecordFilter(filters.FilterSet):
     amount_max = filters.NumberFilter(field_name="amount", lookup_expr="lte")
 
     class Meta:
-        model = Record
+        model = Transaction
         fields = ["date_from", "date_to", "category"]

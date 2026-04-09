@@ -3,19 +3,19 @@ from django.db.models import Count, Sum
 from django.db.models.functions import TruncMonth
 from django.utils.timezone import now
 
-from ..models import Record
+from ..models import Transaction
 
 
 # 🔹 Base queryset
 def get_base_queryset():
-    return Record.objects.all()
+    return Transaction.objects.all()
 
 
 # 🔹 Total income, expense, transactions (1 query)
 def get_income_expense_totals():
     data = get_base_queryset().aggregate(
-        total_income=Sum("amount", filter=models.Q(type=Record.Type.INCOME)),
-        total_expense=Sum("amount", filter=models.Q(type=Record.Type.EXPENSE)),
+        total_income=Sum("amount", filter=models.Q(type=Transaction.Type.INCOME)),
+        total_expense=Sum("amount", filter=models.Q(type=Transaction.Type.EXPENSE)),
         total_transactions=Count("id"),
     )
 
@@ -27,10 +27,10 @@ def get_income_expense_totals():
 
 
 # 🔹 Category-wise totals
-def get_category_totals(record_type):
+def get_category_totals(Transaction_type):
     return list(
         get_base_queryset()
-        .filter(type=record_type)
+        .filter(type=Transaction_type)
         .values("category")
         .annotate(total=Sum("amount"))
         .order_by("-total")
@@ -41,7 +41,7 @@ def get_category_totals(record_type):
 def get_top_expense_category():
     return (
         get_base_queryset()
-        .filter(type=Record.Type.EXPENSE)
+        .filter(type=Transaction.Type.EXPENSE)
         .values("category")
         .annotate(total=Sum("amount"))
         .order_by("-total")
@@ -56,8 +56,8 @@ def get_monthly_trends():
     data = (
         qs.values("month")
         .annotate(
-            income=Sum("amount", filter=models.Q(type=Record.Type.INCOME)),
-            expense=Sum("amount", filter=models.Q(type=Record.Type.EXPENSE)),
+            income=Sum("amount", filter=models.Q(type=Transaction.Type.INCOME)),
+            expense=Sum("amount", filter=models.Q(type=Transaction.Type.EXPENSE)),
         )
         .order_by("month")
     )
@@ -88,8 +88,8 @@ def get_current_month_summary():
     qs = get_base_queryset().filter(date__month=today.month, date__year=today.year)
 
     data = qs.aggregate(
-        income=Sum("amount", filter=models.Q(type=Record.Type.INCOME)),
-        expense=Sum("amount", filter=models.Q(type=Record.Type.EXPENSE)),
+        income=Sum("amount", filter=models.Q(type=Transaction.Type.INCOME)),
+        expense=Sum("amount", filter=models.Q(type=Transaction.Type.EXPENSE)),
     )
 
     return {
@@ -119,8 +119,8 @@ def get_dashboard_summary():
         "total_expense": total_expense,
         "net_balance": total_income - total_expense,
         "total_transactions": totals["total_transactions"],
-        "income_by_category": get_category_totals(Record.Type.INCOME),
-        "expense_by_category": get_category_totals(Record.Type.EXPENSE),
+        "income_by_category": get_category_totals(Transaction.Type.INCOME),
+        "expense_by_category": get_category_totals(Transaction.Type.EXPENSE),
         "top_expense_category": get_top_expense_category(),
         "monthly_summary": get_current_month_summary(),
         "monthly_trends": get_monthly_trends(),

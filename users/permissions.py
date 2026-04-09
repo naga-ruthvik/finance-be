@@ -18,10 +18,9 @@ class IsAnalyst(BasePermission):
         return request.user.role == User.Role.ANALYST
 
 
-class CanViewRecords(BasePermission):
+class CanViewTransactions(BasePermission):
     def has_permission(self, request, view):
         return request.user.role in [
-            User.Role.VIEWER,
             User.Role.ADMIN,
             User.Role.ANALYST,
         ]

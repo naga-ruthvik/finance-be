@@ -9,7 +9,6 @@ paths:
       tags:
       - dashboard
       security:
-      - cookieAuth: []
       - jwtAuth: []
       responses:
         '200':
@@ -18,192 +17,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/DashboardSummary'
           description: ''
-  /api/records/:
-    get:
-      operationId: records_list
-      parameters:
-      - in: query
-        name: amount_max
-        schema:
-          type: number
-      - in: query
-        name: amount_min
-        schema:
-          type: number
-      - in: query
-        name: category
-        schema:
-          type: string
-      - in: query
-        name: date_from
-        schema:
-          type: string
-          format: date
-      - in: query
-        name: date_to
-        schema:
-          type: string
-          format: date
-      - name: ordering
-        required: false
-        in: query
-        description: Which field to use when ordering the results.
-        schema:
-          type: string
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      - name: page_size
-        required: false
-        in: query
-        description: Number of results to return per page.
-        schema:
-          type: integer
-      tags:
-      - records
-      security:
-      - cookieAuth: []
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedRecordList'
-          description: ''
-    post:
-      operationId: records_create
-      tags:
-      - records
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Record'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Record'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Record'
-        required: true
-      security:
-      - cookieAuth: []
-      - jwtAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Record'
-          description: ''
-  /api/records/{id}/:
-    get:
-      operationId: records_retrieve
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this record.
-        required: true
-      tags:
-      - records
-      security:
-      - cookieAuth: []
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Record'
-          description: ''
-    put:
-      operationId: records_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this record.
-        required: true
-      tags:
-      - records
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Record'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Record'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Record'
-        required: true
-      security:
-      - cookieAuth: []
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Record'
-          description: ''
-    patch:
-      operationId: records_partial_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this record.
-        required: true
-      tags:
-      - records
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedRecord'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedRecord'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedRecord'
-      security:
-      - cookieAuth: []
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Record'
-          description: ''
-    delete:
-      operationId: records_destroy
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this record.
-        required: true
-      tags:
-      - records
-      security:
-      - cookieAuth: []
-      - jwtAuth: []
-      responses:
-        '204':
-          description: No response body
   /api/schema/:
     get:
       operationId: schema_retrieve
@@ -328,7 +141,6 @@ paths:
       tags:
       - schema
       security:
-      - cookieAuth: []
       - jwtAuth: []
       - {}
       responses:
@@ -405,13 +217,192 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenRefresh'
           description: ''
+  /api/transactions/:
+    get:
+      operationId: transactions_list
+      parameters:
+      - in: query
+        name: amount_max
+        schema:
+          type: number
+      - in: query
+        name: amount_min
+        schema:
+          type: number
+      - in: query
+        name: category
+        schema:
+          type: string
+      - in: query
+        name: date_from
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: date_to
+        schema:
+          type: string
+          format: date
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - transactions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTransactionList'
+          description: ''
+    post:
+      operationId: transactions_create
+      tags:
+      - transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+          description: ''
+  /api/transactions/{id}/:
+    get:
+      operationId: transactions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this transaction.
+        required: true
+      tags:
+      - transactions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+          description: ''
+    put:
+      operationId: transactions_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this transaction.
+        required: true
+      tags:
+      - transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+          description: ''
+    patch:
+      operationId: transactions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this transaction.
+        required: true
+      tags:
+      - transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTransaction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTransaction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTransaction'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+          description: ''
+    delete:
+      operationId: transactions_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this transaction.
+        required: true
+      tags:
+      - transactions
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
   /api/users/:
     get:
       operationId: users_list
       tags:
       - users
       security:
-      - cookieAuth: []
       - jwtAuth: []
       responses:
         '200':
@@ -439,7 +430,6 @@ paths:
               $ref: '#/components/schemas/User'
         required: true
       security:
-      - cookieAuth: []
       - jwtAuth: []
       responses:
         '201':
@@ -461,7 +451,6 @@ paths:
       tags:
       - users
       security:
-      - cookieAuth: []
       - jwtAuth: []
       responses:
         '200':
@@ -494,7 +483,6 @@ paths:
               $ref: '#/components/schemas/User'
         required: true
       security:
-      - cookieAuth: []
       - jwtAuth: []
       responses:
         '200':
@@ -526,7 +514,6 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedUser'
       security:
-      - cookieAuth: []
       - jwtAuth: []
       responses:
         '200':
@@ -547,7 +534,6 @@ paths:
       tags:
       - users
       security:
-      - cookieAuth: []
       - jwtAuth: []
       responses:
         '204':
@@ -644,7 +630,7 @@ components:
       - total_expense
       - total_income
       - total_transactions
-    PaginatedRecordList:
+    PaginatedTransactionList:
       type: object
       required:
       - count
@@ -666,10 +652,13 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/Record'
-    PatchedRecord:
+            $ref: '#/components/schemas/Transaction'
+    PatchedTransaction:
       type: object
       properties:
+        id:
+          type: integer
+          readOnly: true
         type:
           $ref: '#/components/schemas/TypeEnum'
         date:
@@ -715,42 +704,6 @@ components:
           type: string
           writeOnly: true
           maxLength: 128
-    Record:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/TypeEnum'
-        date:
-          type: string
-          format: date
-        description:
-          type: string
-          nullable: true
-        amount:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
-        category:
-          $ref: '#/components/schemas/CategoryEnum'
-        created_by:
-          type: integer
-          readOnly: true
-        created_at:
-          type: string
-          format: date
-          readOnly: true
-        updated_at:
-          type: string
-          format: date
-          readOnly: true
-      required:
-      - amount
-      - category
-      - created_at
-      - created_by
-      - date
-      - type
-      - updated_at
     RoleEnum:
       enum:
       - VIEWER
@@ -793,6 +746,46 @@ components:
       required:
       - access
       - refresh
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/TypeEnum'
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+          nullable: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        category:
+          $ref: '#/components/schemas/CategoryEnum'
+        created_by:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date
+          readOnly: true
+        updated_at:
+          type: string
+          format: date
+          readOnly: true
+      required:
+      - amount
+      - category
+      - created_at
+      - created_by
+      - date
+      - id
+      - type
+      - updated_at
     TypeEnum:
       enum:
       - INCOME
@@ -823,10 +816,6 @@ components:
       - password
       - username
   securitySchemes:
-    cookieAuth:
-      type: apiKey
-      in: cookie
-      name: sessionid
     jwtAuth:
       type: http
       scheme: bearer

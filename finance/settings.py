@@ -31,7 +31,7 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = "django-insecure-w#*81s#u%5f1u-ua54l9^e5e6qft9z$*jp=t0$y0q$hnrwh2=m"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "django_filters",
     # project apps
     "users",
-    "records",
+    "transactions",
 ]
 
 MIDDLEWARE = [

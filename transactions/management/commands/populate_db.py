@@ -6,25 +6,25 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from records.models import Record
+from transactions.models import Transaction
 from users.models import User
 
 
 class Command(BaseCommand):
-    help = "Populate the database with 3 users and 200 sample records for API testing."
+    help = "Populate the database with 3 users and 200 sample transactions for API testing."
 
     PASSWORD = "SeedPass@123"  # noqa: S105
-    RECORD_COUNT = 200
+    Transaction_COUNT = 200
 
     @transaction.atomic
     def handle(self, *args, **options):
         users = self._create_users()
-        Record.objects.filter(created_by__in=users).delete()
-        created_records = self._create_records(users)
+        Transaction.objects.filter(created_by__in=users).delete()
+        created_transactions = self._create_transactions(users)
 
         self.stdout.write(self.style.SUCCESS("Database populated successfully."))
         self.stdout.write("Created users: analyst, viewer, admin")
-        self.stdout.write(f"Created records: {created_records}")
+        self.stdout.write(f"Created transactions: {created_transactions}")
         self.stdout.write(f"All seeded users use password: {self.PASSWORD}")
 
     def _create_users(self):
@@ -75,41 +75,41 @@ class Command(BaseCommand):
 
         return users
 
-    def _create_records(self, users):
+    def _create_transactions(self, users):
         today = timezone.localdate()
-        record_templates = [
+        Transaction_templates = [
             {
-                "type": Record.Type.INCOME,
-                "category": Record.Category.SALARY,
+                "type": Transaction.Type.INCOME,
+                "category": Transaction.Category.SALARY,
                 "amount": Decimal("5000.00"),
                 "description": "Monthly salary",
             },
             {
-                "type": Record.Type.EXPENSE,
-                "category": Record.Category.FOOD,
+                "type": Transaction.Type.EXPENSE,
+                "category": Transaction.Category.FOOD,
                 "amount": Decimal("45.50"),
                 "description": "Lunch expense",
             },
             {
-                "type": Record.Type.EXPENSE,
-                "category": Record.Category.TRANSPORT,
+                "type": Transaction.Type.EXPENSE,
+                "category": Transaction.Category.TRANSPORT,
                 "amount": Decimal("18.25"),
                 "description": "Travel to office",
             },
             {
-                "type": Record.Type.INCOME,
-                "category": Record.Category.BONUS,
+                "type": Transaction.Type.INCOME,
+                "category": Transaction.Category.BONUS,
                 "amount": Decimal("250.00"),
                 "description": "Performance bonus",
             },
         ]
 
-        records_to_create = []
-        for index in range(self.RECORD_COUNT):
+        transactions_to_create = []
+        for index in range(self.Transaction_COUNT):
             user = users[index % len(users)]
-            template = record_templates[index % len(record_templates)]
-            records_to_create.append(
-                Record(
+            template = Transaction_templates[index % len(Transaction_templates)]
+            transactions_to_create.append(
+                Transaction(
                     created_by=user,
                     type=template["type"],
                     category=template["category"],
@@ -119,5 +119,5 @@ class Command(BaseCommand):
                 )
             )
 
-        Record.objects.bulk_create(records_to_create, batch_size=200)
-        return len(records_to_create)
+        Transaction.objects.bulk_create(transactions_to_create, batch_size=200)
+        return len(transactions_to_create)

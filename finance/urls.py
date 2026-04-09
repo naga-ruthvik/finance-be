@@ -28,7 +28,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from records.views import DashboardSummaryView
+from transactions.views import DashboardSummaryView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -39,6 +39,6 @@ urlpatterns = [
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/users/", include("users.urls")),
-    path("api/records/", include("records.urls")),
+    path("api/transactions/", include("transactions.urls")),
     path("api/dashboard/summary/", DashboardSummaryView.as_view(), name="dashboard-summary"),
 ]

@@ -9,22 +9,22 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from users.permissions import CanViewRecords, IsAdmin, IsAnalyst, IsViewer
+from users.permissions import CanViewTransactions, IsAdmin, IsAnalyst, IsViewer
 
-from .filters import RecordFilter
-from .models import Record
+from .filters import TransactionFilter
+from .models import Transaction
 from .pagination import StandardResultsSetPagination
-from .serializers import DashboardSummarySerializer, RecordSerializer
+from .serializers import DashboardSummarySerializer, TransactionSerializer
 from .services.dashboard import get_dashboard_summary
 
 # Create your views here.
 
 
-class RecordView(viewsets.ModelViewSet):
-    serializer_class = RecordSerializer
-    queryset = Record.objects.all()
+class TransactionView(viewsets.ModelViewSet):
+    serializer_class = TransactionSerializer
+    queryset = Transaction.objects.all()
     filter_backends = (filters.DjangoFilterBackend, OrderingFilter)
-    filterset_class = RecordFilter
+    filterset_class = TransactionFilter
     pagination_class = StandardResultsSetPagination
     ordering_fields = ["amount", "date"]
     ordering = ["-created_at"]
@@ -33,7 +33,7 @@ class RecordView(viewsets.ModelViewSet):
         if self.action in ["create", "update", "partial_update", "destroy"]:
             permission_classes = [IsAuthenticated, IsAdmin]
         else:
-            permission_classes = [IsAuthenticated, CanViewRecords]
+            permission_classes = [IsAuthenticated, CanViewTransactions]
 
         return [permission() for permission in permission_classes]
 
@@ -42,7 +42,9 @@ class RecordView(viewsets.ModelViewSet):
 
 
 class DashboardSummaryView(APIView):
-    permission_classes = [IsAuthenticated, IsAnalyst | IsAdmin]
+    permission_classes = [
+        IsAuthenticated,
+    ]
 
     @extend_schema(
         responses={200: DashboardSummarySerializer},
@@ -52,11 +54,3 @@ class DashboardSummaryView(APIView):
         data = get_dashboard_summary()
         serializer = DashboardSummarySerializer(data)
         return Response(serializer.data)
-
-
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def get_dashboard_summary_api(request):
-    """Note: This function is deprecated in favor of DashboardSummaryView."""
-    view = DashboardSummaryView.as_view()
-    return view(request._request)

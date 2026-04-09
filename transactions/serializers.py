@@ -2,12 +2,12 @@ from decimal import Decimal
 
 from rest_framework import serializers
 
-from .models import Record
+from .models import Transaction
 
 
-class RecordSerializer(serializers.ModelSerializer):
+class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Record
+        model = Transaction
         fields = [
             "id",
             "type",
@@ -30,47 +30,47 @@ class RecordSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """
-        Validate that the chosen category matches the record type.
+        Validate that the chosen category matches the Transaction type.
         """
         # Handle partial updates by getting existing values if not provided in data
-        record_type = data.get("type")
+        Transaction_type = data.get("type")
         category = data.get("category")
 
         if self.instance:
-            if record_type is None:
-                record_type = self.instance.type
+            if Transaction_type is None:
+                Transaction_type = self.instance.type
             if category is None:
                 category = self.instance.category
 
-        # Define category groupings based on the Record model
+        # Define category groupings based on the Transaction model
         income_categories = {
-            Record.Category.SALARY,
-            Record.Category.FREELANCE,
-            Record.Category.BUSINESS,
-            Record.Category.INVESTMENT,
-            Record.Category.BONUS,
-            Record.Category.OTHER_INCOME,
+            Transaction.Category.SALARY,
+            Transaction.Category.FREELANCE,
+            Transaction.Category.BUSINESS,
+            Transaction.Category.INVESTMENT,
+            Transaction.Category.BONUS,
+            Transaction.Category.OTHER_INCOME,
         }
 
         expense_categories = {
-            Record.Category.FOOD,
-            Record.Category.RENT,
-            Record.Category.TRANSPORT,
-            Record.Category.UTILITIES,
-            Record.Category.ENTERTAINMENT,
-            Record.Category.HEALTH,
-            Record.Category.SHOPPING,
-            Record.Category.EDUCATION,
-            Record.Category.TRAVEL,
+            Transaction.Category.FOOD,
+            Transaction.Category.RENT,
+            Transaction.Category.TRANSPORT,
+            Transaction.Category.UTILITIES,
+            Transaction.Category.ENTERTAINMENT,
+            Transaction.Category.HEALTH,
+            Transaction.Category.SHOPPING,
+            Transaction.Category.EDUCATION,
+            Transaction.Category.TRAVEL,
         }
 
         # Perform the validation
-        if record_type == Record.Type.INCOME and category not in income_categories:
+        if Transaction_type == Transaction.Type.INCOME and category not in income_categories:
             raise serializers.ValidationError(
                 {"category": f"'{category}' is not a valid category for income."}
             )
 
-        if record_type == Record.Type.EXPENSE and category not in expense_categories:
+        if Transaction_type == Transaction.Type.EXPENSE and category not in expense_categories:
             raise serializers.ValidationError(
                 {"category": f"'{category}' is not a valid category for expense."}
             )
