@@ -616,6 +616,15 @@ finance-be/
 
 ## 🚀 Production Deployment
 
+**API URL:** `https://finance-be-84st.onrender.com/`
+
+**Swagger Docs:** `https://finance-be-84st.onrender.com/api/docs/`
+
+### Environment Configuration
+
+The project is configured for deployment on Render using Gunicorn. Ensure `DATABASE_URL` is set in your environment
+variables to switch from SQLite to PostgreSQL.
+
 ### Environment Configuration
 
 **Required Environment Variables:**
@@ -642,12 +651,5 @@ ruff format .
 Configuration in `ruff.toml` enforces Django best practices and Python 3.12+ idioms.
 
 ---
-
-## 🙋 Support
-
-For questions or issues:
-
-- Review the [Interactive API Documentation](https://finance-be-84st.onrender.com/api/docs/)
-- Check the OpenAPI schema at `/api/schema/`
 
 
